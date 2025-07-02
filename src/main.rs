@@ -9,6 +9,7 @@ mod customer;
 mod engine;
 mod imp;
 mod ui;
+mod salon;
 
 fn main() {
     let mut app = App::new();

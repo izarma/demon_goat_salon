@@ -3,8 +3,8 @@ use bevy_asset_loader::prelude::*;
 
 #[derive(AssetCollection, Resource)]
 pub struct ImageAssets {
-    #[asset(path = "characters/werewolf.png")]
+    #[asset(path = "images/werewolf.png")]
     pub werewolf: Handle<Image>,
-    #[asset(path = "characters/karasutengu.png")]
-    pub imp: Handle<Image>,
+    #[asset(path = "images/couch.png")]
+    pub couch: Handle<Image>,
 }

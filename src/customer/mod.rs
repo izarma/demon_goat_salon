@@ -42,7 +42,7 @@ fn spawn_customer(
             ..default()
         },
         Transform {
-            translation: Vec3::new(400., -40., 1.),
+            translation: Vec3::new(400., 20., 1.),
             scale: Vec3::new(-1.0, 1.0, 1.0),
             ..default()
         },

@@ -1,24 +1,24 @@
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
+use avian2d::{math::*, prelude::*};
 
 use crate::{
-    customer::CustomerPlugin,
-    engine::{GameState, asset_loader::ImageAssets},
-    ui::GameUiPlugin,
+    couch::CouchPlugin, customer::CustomerPlugin, engine::{asset_loader::ImageAssets, GameState}, salon::SalonPlugin, ui::GameUiPlugin
 };
 
 pub struct GameRunnerPlugin;
 
 impl Plugin for GameRunnerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((GameUiPlugin, CustomerPlugin))
+        app.add_plugins((GameUiPlugin, CustomerPlugin, CouchPlugin, SalonPlugin, PhysicsPlugins::default().with_length_unit(20.0)))
             .add_loading_state(
                 LoadingState::new(GameState::Loading)
                     //.load_collection::<AudioAssets>()
                     .load_collection::<ImageAssets>()
                     .continue_to_state(GameState::InGame),
             )
-            .add_systems(Startup, setup_camera);
+            .add_systems(Startup, setup_camera)
+            .insert_resource(Gravity(Vector::NEG_Y * 9.81 * 100.0));
     }
 }
 
