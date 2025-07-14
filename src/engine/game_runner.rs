@@ -1,16 +1,19 @@
+use avian2d::{math::*, prelude::*};
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
-use avian2d::{math::*, prelude::*};
 
 use crate::{
-    couch::CouchPlugin, customer::CustomerPlugin, engine::{asset_loader::ImageAssets, GameState}, salon::SalonPlugin, ui::GameUiPlugin
+    customer::CustomerPlugin,
+    engine::{asset_loader::ImageAssets, physics_engine::PhysicsEnginePlugin, GameState},
+    salon::SalonPlugin,
+    ui::GameUiPlugin,
 };
 
 pub struct GameRunnerPlugin;
 
 impl Plugin for GameRunnerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((GameUiPlugin, CustomerPlugin, CouchPlugin, SalonPlugin, PhysicsPlugins::default().with_length_unit(20.0)))
+        app.add_plugins((GameUiPlugin, CustomerPlugin, SalonPlugin, PhysicsEnginePlugin))
             .add_loading_state(
                 LoadingState::new(GameState::Loading)
                     //.load_collection::<AudioAssets>()

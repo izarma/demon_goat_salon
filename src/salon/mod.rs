@@ -1,5 +1,5 @@
-use bevy::prelude::*;
 use avian2d::prelude::*;
+use bevy::prelude::*;
 
 use crate::engine::GameState;
 
@@ -11,10 +11,8 @@ impl Plugin for SalonPlugin {
     }
 }
 
-fn setup_salon(
-    mut commands: Commands,
-) {
-     let square_sprite = Sprite {
+fn setup_salon(mut commands: Commands) {
+    let square_sprite = Sprite {
         color: Color::srgb(0.7, 0.1, 0.1),
         custom_size: Some(Vec2::splat(50.0)),
         ..default()

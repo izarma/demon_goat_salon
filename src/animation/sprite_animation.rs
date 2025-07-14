@@ -17,10 +17,7 @@ impl Default for SpriteAnimState {
     }
 }
 
-pub fn animate_sprite(
-    time: Res<Time>,
-    mut query: Query<(&mut Sprite, &mut SpriteAnimState)>,
-) {
+pub fn animate_sprite(time: Res<Time>, mut query: Query<(&mut Sprite, &mut SpriteAnimState)>) {
     for (mut sprite, mut anim_state) in query.iter_mut() {
         anim_state.timer.tick(time.delta());
         if anim_state.timer.finished() {

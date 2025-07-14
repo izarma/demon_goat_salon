@@ -4,12 +4,11 @@ use crate::engine::{GameState, game_runner::GameRunnerPlugin};
 
 mod animation;
 mod consts;
-mod couch;
 mod customer;
 mod engine;
 mod imp;
-mod ui;
 mod salon;
+mod ui;
 
 fn main() {
     let mut app = App::new();

@@ -7,4 +7,8 @@ pub struct ImageAssets {
     pub werewolf: Handle<Image>,
     #[asset(path = "images/couch.png")]
     pub couch: Handle<Image>,
+    #[asset(path = "images/imp/Idle.png")]
+    pub imp_idle: Handle<Image>,
+    #[asset(path = "images/imp/Walk.png")]
+    pub imp_walk: Handle<Image>,
 }
