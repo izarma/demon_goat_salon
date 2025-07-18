@@ -1,15 +1,15 @@
 use bevy::prelude::*;
 
 use crate::{
-    animation::sprite_animation::{SpriteAnimState, animate_sprite},
-    engine::{GameState, asset_loader::ImageAssets},
+    animation::sprite_animation::{animate_sprite, SpriteAnimState},
+    engine::{asset_loader::ImageAssets, game_runner::play_salon_bg, GameState},
 };
 
 pub struct CustomerPlugin;
 
 impl Plugin for CustomerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::InGame), spawn_customer)
+        app.add_systems(OnEnter(GameState::InGame), (spawn_customer, play_salon_bg))
             .add_systems(Update, (animate_sprite).run_if(in_state(GameState::InGame)));
     }
 }
