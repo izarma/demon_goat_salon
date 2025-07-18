@@ -3,14 +3,14 @@ use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
 use crate::{
-    customer::CustomerPlugin, engine::{asset_loader::ImageAssets, physics_engine::PhysicsEnginePlugin, GameState}, imp::ImpPlugin, salon::SalonPlugin, ui::GameUiPlugin
+    customer::CustomerPlugin, engine::{asset_loader::ImageAssets, input_manager::PlayerInputPlugin, physics_engine::PhysicsEnginePlugin, GameState}, imp::ImpPlugin, salon::SalonPlugin, ui::GameUiPlugin
 };
 
 pub struct GameRunnerPlugin;
 
 impl Plugin for GameRunnerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((GameUiPlugin, CustomerPlugin, SalonPlugin, ImpPlugin, PhysicsEnginePlugin))
+        app.add_plugins((GameUiPlugin, CustomerPlugin, SalonPlugin, ImpPlugin, PhysicsEnginePlugin, PlayerInputPlugin))
             .add_loading_state(
                 LoadingState::new(GameState::Loading)
                     //.load_collection::<AudioAssets>()

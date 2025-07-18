@@ -9,6 +9,7 @@ bevy = "0.16.1"
 bevy-tnua = "0.24.0"
 bevy-tnua-avian2d = "0.5.0"
 bevy_asset_loader = "0.23.0"
+bevy_enhanced_input = "0.14.1"
 
 # Enable a small amount of optimization in the dev profile.
 [profile.dev]
