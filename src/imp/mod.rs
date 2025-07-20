@@ -28,10 +28,10 @@ fn setup_characters(
     image_assets: Res<ImageAssets>,
     mut texture_atlases: ResMut<Assets<TextureAtlasLayout>>,
 ) {
-    let frame_size = UVec2::new(719, 1024);
+    let frame_size = UVec2::new(1023, 1024);
     let player_layout_handle = texture_atlases.add(TextureAtlasLayout::from_grid(
         frame_size as UVec2,
-        11,
+        10,
         1,
         None,
         None,
@@ -46,19 +46,19 @@ fn setup_characters(
                 layout: player_layout_handle.clone(),
                 index: 0,
             }),
-            custom_size: Some(Vec2::new(128., 128.)),
+            custom_size: Some(Vec2::new(256., 256.)),
             ..default()
         },
         Transform::from_translation(Vec3::new(-400., -170., 1.)),
         SpriteAnimState {
             start_index: 0,
-            end_index: 10,
+            end_index: 9,
             timer: Timer::from_seconds(1.0 / 12.0, TimerMode::Repeating),
         },
     ));
     cmd.insert((
         RigidBody::Dynamic,
-        Collider::capsule(10., 48.0),
+        Collider::capsule(40., 144.0),
         TnuaController::default(),
         TnuaObstacleRadar::new(1.0, 3.0),
         TnuaAnimatingState::<AnimationState>::default(),
@@ -73,19 +73,19 @@ fn setup_characters(
                 layout: player_layout_handle,
                 index: 0,
             }),
-            custom_size: Some(Vec2::new(128., 128.)),
+            custom_size: Some(Vec2::new(256., 256.)),
             ..default()
         },
         Transform::from_translation(Vec3::new(-250., -170., 1.1)),
         SpriteAnimState {
             start_index: 0,
-            end_index: 10,
+            end_index: 9,
             timer: Timer::from_seconds(1.0 / 12.0, TimerMode::Repeating),
         },
     ));
     cmd2.insert((
         RigidBody::Dynamic,
-        Collider::capsule(10., 48.0),
+        Collider::capsule(40., 144.0),
         TnuaController::default(),
         TnuaObstacleRadar::new(1.0, 3.0),
         TnuaAnimatingState::<AnimationState>::default(),
