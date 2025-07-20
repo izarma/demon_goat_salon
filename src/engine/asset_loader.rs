@@ -12,6 +12,8 @@ pub struct ImageAssets {
     pub imp_jump: Handle<Image>,
     #[asset(path = "images/goat/goat-base.png")]
     pub goat_base: Handle<Image>,
+    #[asset(path = "images/goat/goat-jaw.png")]
+    pub goat_jaw: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]

@@ -1,40 +1,72 @@
-use bevy::prelude::*;
+use bevy::{input::gamepad::GamepadConnectionEvent, prelude::*};
 use bevy_enhanced_input::{prelude::*, EnhancedInputPlugin};
 
 pub struct PlayerInputPlugin;
 
 impl Plugin for PlayerInputPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((EnhancedInputPlugin));
+        app.add_plugins((EnhancedInputPlugin))
+        .init_resource::<Gamepads>()
+        .add_input_context::<Player>()
+        .add_observer(bind)
+        .add_systems(
+            FixedUpdate,
+            update_gamepads.run_if(on_event::<GamepadConnectionEvent>),
+        )
+        ;
     }
 }
 
-#[derive(Debug, InputAction)]
-#[input_action(output = bool)]
-struct Player1Jump;
+/// Used as both input context and component.
+#[derive(InputContext, Component, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Player {
+    First,
+    Second,
+}
 
-#[derive(Debug, InputAction)]
-#[input_action(output = bool)]
-struct Player2Jump;
+/// A resource that tracks all connected gamepads to pick them by index.
+#[derive(Resource, Default, Deref, DerefMut)]
+struct Gamepads(Vec<Entity>);
 
 #[derive(Debug, InputAction)]
 #[input_action(output = Vec2)]
-struct Player1Move;
-
-#[derive(Debug, InputAction)]
-#[input_action(output = Vec2)]
-struct Player2Move;
+pub struct Move;
 
 #[derive(Debug, InputAction)]
 #[input_action(output = bool)]
-struct Player1Interact;
+struct Jump;
 
 #[derive(Debug, InputAction)]
 #[input_action(output = bool)]
-struct Player2Interact;
+struct Interact;
 
-#[derive(InputContext)]
-struct OnFoot;
+fn bind(
+    trigger: Trigger<Bind<Player>>,
+    gamepads: Query<Entity, With<Gamepad>>,
+    mut players: Query<(&Player, &mut Actions<Player>)>,
+) {
+    let (&player, mut actions) = players.get_mut(trigger.target()).unwrap();
+    let gamepad_entity = gamepads.iter().nth(player as usize);
+    actions.set_gamepad(gamepad_entity.unwrap_or(Entity::PLACEHOLDER));
 
-#[derive(InputContext)]
-struct OperatingControlPanel;
+    match player {
+        Player::First => {
+            actions
+            .bind::<Move>()
+            .to((Cardinal::wasd_keys(), Axial::left_stick()));
+        }
+        Player::Second => {
+            actions
+            .bind::<Move>()
+            .to((Cardinal::arrow_keys(), Axial::left_stick()));
+        }
+    }
+
+    actions
+        .bind::<Move>()
+        .with_modifiers((DeadZone::default(), SmoothNudge::default()));
+}
+
+fn update_gamepads(mut commands: Commands) {
+    commands.trigger(RebindAll);
+}
