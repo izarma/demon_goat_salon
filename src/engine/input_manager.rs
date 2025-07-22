@@ -1,19 +1,21 @@
 use bevy::{input::gamepad::GamepadConnectionEvent, prelude::*};
-use bevy_enhanced_input::{prelude::*, EnhancedInputPlugin};
+use bevy_enhanced_input::{EnhancedInputPlugin, prelude::*};
 
 pub struct PlayerInputPlugin;
 
 impl Plugin for PlayerInputPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((EnhancedInputPlugin))
-        .init_resource::<Gamepads>()
-        .add_input_context::<Player>()
-        .add_observer(bind)
-        .add_systems(
-            FixedUpdate,
-            update_gamepads.run_if(on_event::<GamepadConnectionEvent>),
-        )
-        ;
+            .add_event::<PlayerInputs>()
+            .init_resource::<Gamepads>()
+            .add_input_context::<Player>()
+            .add_observer(bind)
+            .add_observer(apply_movement)
+            .add_observer(apply_jump)
+            .add_systems(
+                FixedUpdate,
+                update_gamepads.run_if(on_event::<GamepadConnectionEvent>),
+            );
     }
 }
 
@@ -52,13 +54,15 @@ fn bind(
     match player {
         Player::First => {
             actions
-            .bind::<Move>()
-            .to((Cardinal::wasd_keys(), Axial::left_stick()));
+                .bind::<Move>()
+                .to(((Cardinal::wasd_keys()), Axial::left_stick()));
+            actions.bind::<Jump>().to(KeyCode::KeyW);
         }
         Player::Second => {
             actions
-            .bind::<Move>()
-            .to((Cardinal::arrow_keys(), Axial::left_stick()));
+                .bind::<Move>()
+                .to((Cardinal::arrow_keys(), Axial::left_stick()));
+            actions.bind::<Jump>().to(KeyCode::ArrowUp);
         }
     }
 
@@ -69,4 +73,22 @@ fn bind(
 
 fn update_gamepads(mut commands: Commands) {
     commands.trigger(RebindAll);
+}
+
+#[derive(Event, Debug)]
+pub enum PlayerInputs {
+    Walk(Entity, f32),
+    Jump(Entity),
+}
+
+fn apply_movement(
+    trigger: Trigger<Fired<Move>>,
+    mut player_input_events: EventWriter<PlayerInputs>,
+) {
+    player_input_events.write(PlayerInputs::Walk(trigger.target(), trigger.value.x));
+    //info!("entity : {:#?} , movement : {}", trigger.target(), trigger.value.x);
+}
+
+fn apply_jump(trigger: Trigger<Fired<Jump>>, mut player_input_events: EventWriter<PlayerInputs>) {
+    player_input_events.write(PlayerInputs::Jump(trigger.target()));
 }

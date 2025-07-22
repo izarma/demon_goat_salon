@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 
 use crate::{
-    animation::sprite_animation::{animate_sprite, SpriteAnimState},
-    engine::{asset_loader::ImageAssets, game_runner::play_salon_bg, GameState},
+    animation::sprite_animation::{SpriteAnimState, animate_sprite},
+    engine::{GameState, asset_loader::ImageAssets, game_runner::play_salon_bg},
 };
 
 pub struct CustomerPlugin;
@@ -17,10 +17,7 @@ impl Plugin for CustomerPlugin {
 #[derive(Component)]
 pub struct Customer;
 
-fn spawn_customer(
-    mut commands: Commands,
-    image_assets: Res<ImageAssets>,
-) {
+fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
     commands.spawn((
         Customer,
         Sprite {
@@ -30,7 +27,7 @@ fn spawn_customer(
         },
         Transform {
             translation: Vec3::new(0., -15., -10.),
-            scale: Vec3::new(0.6 ,0.6, 1.0),
+            scale: Vec3::new(0.6, 0.6, 1.0),
             ..default()
         },
     ));

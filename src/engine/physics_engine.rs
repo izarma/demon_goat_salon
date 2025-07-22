@@ -1,6 +1,11 @@
-use avian2d::{prelude::*, PhysicsPlugins};
+use avian2d::{PhysicsPlugins, prelude::*};
 use bevy::prelude::*;
-use bevy_tnua::{builtins::TnuaBuiltinClimb, control_helpers::TnuaCrouchEnforcerPlugin, prelude::{TnuaBuiltinJump, TnuaBuiltinWalk, TnuaController, TnuaControllerPlugin}, TnuaAction, TnuaObstacleRadar, TnuaUserControlsSystemSet};
+use bevy_tnua::{
+    TnuaAction, TnuaObstacleRadar, TnuaUserControlsSystemSet,
+    builtins::TnuaBuiltinClimb,
+    control_helpers::TnuaCrouchEnforcerPlugin,
+    prelude::{TnuaBuiltinJump, TnuaBuiltinWalk, TnuaController, TnuaControllerPlugin},
+};
 use bevy_tnua_avian2d::TnuaAvian2dPlugin;
 
 use crate::{
@@ -20,4 +25,3 @@ impl Plugin for PhysicsEnginePlugin {
         ));
     }
 }
-

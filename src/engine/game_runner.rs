@@ -1,25 +1,42 @@
 use avian2d::{math::*, prelude::*};
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
-use bevy_seedling::{sample::SamplePlayer, SeedlingPlugin};
+use bevy_seedling::{SeedlingPlugin, sample::SamplePlayer};
 
 use crate::{
-    customer::CustomerPlugin, engine::{asset_loader::{AudioAssets, ImageAssets}, input_manager::PlayerInputPlugin, physics_engine::PhysicsEnginePlugin, GameState}, imp::ImpPlugin, salon::SalonPlugin, ui::GameUiPlugin
+    customer::CustomerPlugin,
+    engine::{
+        GameState,
+        asset_loader::{AudioAssets, ImageAssets},
+        input_manager::PlayerInputPlugin,
+        physics_engine::PhysicsEnginePlugin,
+    },
+    imp::ImpPlugin,
+    salon::SalonPlugin,
+    ui::GameUiPlugin,
 };
 
 pub struct GameRunnerPlugin;
 
 impl Plugin for GameRunnerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((GameUiPlugin, CustomerPlugin, SalonPlugin, ImpPlugin, PhysicsEnginePlugin, PlayerInputPlugin, SeedlingPlugin::default(),))
-            .add_loading_state(
-                LoadingState::new(GameState::Loading)
-                    .load_collection::<AudioAssets>()
-                    .load_collection::<ImageAssets>()
-                    .continue_to_state(GameState::InGame),
-            )
-            .add_systems(Startup, setup_camera)
-            .insert_resource(Gravity(Vector::NEG_Y * 9.81 * 100.0));
+        app.add_plugins((
+            GameUiPlugin,
+            CustomerPlugin,
+            SalonPlugin,
+            ImpPlugin,
+            PhysicsEnginePlugin,
+            PlayerInputPlugin,
+            SeedlingPlugin::default(),
+        ))
+        .add_loading_state(
+            LoadingState::new(GameState::Loading)
+                .load_collection::<AudioAssets>()
+                .load_collection::<ImageAssets>()
+                .continue_to_state(GameState::InGame),
+        )
+        .add_systems(Startup, setup_camera)
+        .insert_resource(Gravity(Vector::NEG_Y * 9.81 * 100.0));
     }
 }
 
@@ -39,7 +56,5 @@ fn setup_camera(mut commands: Commands) {
 }
 
 pub fn play_salon_bg(mut commands: Commands, audio_assets: Res<AudioAssets>) {
-    commands.spawn((
-        SamplePlayer::new(audio_assets.background.clone()).looping(),
-    ));
+    commands.spawn((SamplePlayer::new(audio_assets.background.clone()).looping(),));
 }
