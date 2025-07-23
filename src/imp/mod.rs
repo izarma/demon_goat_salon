@@ -121,6 +121,7 @@ fn apply_controls(
                 });
             }
             PlayerInputs::Jump(entity) => {
+                info!("Jump pressed for {:#?}", entity);
                 let player_entity = entity.clone();
                 let mut controller = players_query.get_mut(player_entity).unwrap();
                 controller.action(TnuaBuiltinJump {

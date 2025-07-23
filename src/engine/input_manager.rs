@@ -56,13 +56,13 @@ fn bind(
             actions
                 .bind::<Move>()
                 .to(((Cardinal::wasd_keys()), Axial::left_stick()));
-            actions.bind::<Jump>().to(KeyCode::KeyW);
+            actions.bind::<Jump>().to(KeyCode::Space);
         }
         Player::Second => {
             actions
                 .bind::<Move>()
                 .to((Cardinal::arrow_keys(), Axial::left_stick()));
-            actions.bind::<Jump>().to(KeyCode::ArrowUp);
+            actions.bind::<Jump>().to(KeyCode::Enter);
         }
     }
 
