@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{consts::TEXT_COLOR, engine::game_runner::OnGameScreen};
+use crate::{consts::TEXT_COLOR, engine::game_runner::OnGameScreen, ui::game_over::OnGameOver};
 
 #[derive(Component, Debug)]
 pub struct Score {
@@ -29,7 +29,10 @@ pub fn setup_points(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..Default::default()
         },
     ));
-    commands.spawn(Score {
-        total: initial_points,
-    });
+    commands.spawn((
+        Score {
+            total: initial_points,
+        },
+        OnGameOver,
+    ));
 }

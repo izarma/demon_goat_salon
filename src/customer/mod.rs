@@ -6,6 +6,7 @@ use crate::{
     animation::sprite_animation::animate_sprite,
     customer::customer_timer::{game_over, spawn_timer, update_timer},
     engine::{GameState, asset_loader::ImageAssets, game_runner::play_salon_bg},
+    ui::game_over::OnGameOver,
 };
 
 mod customer_timer;
@@ -43,7 +44,7 @@ fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
     // goat base
     commands.spawn((
         Customer {
-            anger_timer: Timer::new(Duration::from_secs_f32(5.0), TimerMode::Once),
+            anger_timer: Timer::new(Duration::from_secs_f32(1.0), TimerMode::Once),
         },
         Sprite {
             image: image_assets.goat_base.clone(),
@@ -55,6 +56,7 @@ fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
             scale: Vec3::new(0.6, 0.6, 1.0),
             ..default()
         },
+        OnGameOver,
     ));
 
     // goat jaw
@@ -77,6 +79,7 @@ fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
             radius: 15.0,
             speed: 6.0,
         },
+        OnGameOver,
     ));
 
     // goat ears
@@ -92,6 +95,7 @@ fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
             scale: Vec3::new(0.6, 0.6, 1.0),
             ..default()
         },
+        OnGameOver,
     ));
 
     // goat hair A1 left
@@ -107,6 +111,7 @@ fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
             scale: Vec3::new(0.6, 0.6, 1.0),
             ..default()
         },
+        OnGameOver,
     ));
 
     // goat hair A1 right
@@ -122,6 +127,7 @@ fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
             scale: Vec3::new(0.6, 0.6, 1.0),
             ..default()
         },
+        OnGameOver,
     ));
 
     // goat hair A2 left
@@ -137,6 +143,7 @@ fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
             scale: Vec3::new(0.6, 0.6, 1.0),
             ..default()
         },
+        OnGameOver,
     ));
 
     // goat hair A2 right
@@ -152,6 +159,7 @@ fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
             scale: Vec3::new(0.6, 0.6, 1.0),
             ..default()
         },
+        OnGameOver,
     ));
 }
 
