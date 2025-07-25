@@ -1,22 +1,34 @@
+use std::time::Duration;
+
 use bevy::prelude::*;
 
 use crate::{
     animation::sprite_animation::animate_sprite,
+    customer::customer_timer::{game_over, spawn_timer, update_timer},
     engine::{GameState, asset_loader::ImageAssets, game_runner::play_salon_bg},
 };
+
+mod customer_timer;
 
 pub struct CustomerPlugin;
 
 impl Plugin for CustomerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::InGame), (spawn_customer, play_salon_bg))
-            .add_systems(Update, (animate_sprite).run_if(in_state(GameState::InGame)))
-            .add_systems(Update, move_jaw.run_if(in_state(GameState::InGame)));
+        app.add_systems(
+            OnEnter(GameState::InGame),
+            ((spawn_customer, spawn_timer).chain(), play_salon_bg),
+        )
+        .add_systems(
+            Update,
+            (animate_sprite, update_timer, move_jaw, game_over).run_if(in_state(GameState::InGame)),
+        );
     }
 }
 
 #[derive(Component)]
-pub struct Customer;
+pub struct Customer {
+    anger_timer: Timer,
+}
 
 #[derive(Component)]
 pub struct CustomerBody;
@@ -30,7 +42,9 @@ pub struct GoatHair;
 fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
     // goat base
     commands.spawn((
-        Customer,
+        Customer {
+            anger_timer: Timer::new(Duration::from_secs_f32(5.0), TimerMode::Once),
+        },
         Sprite {
             image: image_assets.goat_base.clone(),
             custom_size: Some(Vec2::new(2787., 1390.)),
@@ -44,7 +58,7 @@ fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
     ));
 
     // goat jaw
-    let jaw_center = Vec3::new(0., -110., -11.);
+    let jaw_center = Vec3::new(0., -115., -11.);
     commands.spawn((
         CustomerBody,
         GoatJaw,
@@ -61,7 +75,7 @@ fn spawn_customer(mut commands: Commands, image_assets: Res<ImageAssets>) {
         JawMotion {
             center: jaw_center,
             radius: 15.0,
-            speed: 3.0,
+            speed: 6.0,
         },
     ));
 
@@ -148,17 +162,12 @@ struct JawMotion {
     speed: f32,
 }
 
-fn move_jaw(
-    mut jaw_query: Query<(&mut Transform, &JawMotion), With<GoatJaw>>,
-    time: Res<Time>,
-) {
+fn move_jaw(mut jaw_query: Query<(&mut Transform, &JawMotion), With<GoatJaw>>, time: Res<Time>) {
     for (mut transform, motion) in jaw_query.iter_mut() {
-        // Calculate circular position using cosine/sine
         let t = time.elapsed_secs() * motion.speed;
         let x_offset = motion.radius * t.cos();
         let y_offset = motion.radius * t.sin();
-        
-        // Apply circular motion while maintaining Z position
+
         transform.translation = motion.center + Vec3::new(x_offset, y_offset, 0.0);
     }
 }

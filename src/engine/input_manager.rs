@@ -5,7 +5,7 @@ pub struct PlayerInputPlugin;
 
 impl Plugin for PlayerInputPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((EnhancedInputPlugin))
+        app.add_plugins(EnhancedInputPlugin)
             .add_event::<PlayerInputs>()
             .init_resource::<Gamepads>()
             .add_input_context::<Player>()
@@ -38,9 +38,9 @@ pub struct Move;
 #[input_action(output = bool)]
 struct Jump;
 
-#[derive(Debug, InputAction)]
-#[input_action(output = bool)]
-struct Interact;
+// #[derive(Debug, InputAction)]
+// #[input_action(output = bool)]
+// struct Interact;
 
 fn bind(
     trigger: Trigger<Bind<Player>>,

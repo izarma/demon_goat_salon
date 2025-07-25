@@ -1,9 +1,8 @@
 use avian2d::prelude::*;
 use bevy::prelude::*;
-use bevy_enhanced_input::prelude::{Actions, Fired};
+use bevy_enhanced_input::prelude::Actions;
 use bevy_tnua::{
-    TnuaAction, TnuaAnimatingState, TnuaObstacleRadar, TnuaUserControlsSystemSet,
-    builtins::TnuaBuiltinClimb,
+    TnuaAnimatingState, TnuaObstacleRadar, TnuaUserControlsSystemSet,
     prelude::{TnuaBuiltinJump, TnuaBuiltinWalk, TnuaController},
 };
 
@@ -12,27 +11,25 @@ use crate::{
     engine::{
         GameState,
         asset_loader::ImageAssets,
+        game_runner::OnGameScreen,
         input_manager::{Player, PlayerInputs},
     },
+    imp::score::setup_points,
 };
+
+pub mod score;
 
 pub struct ImpPlugin;
 
 impl Plugin for ImpPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::InGame), setup_characters)
+        app.add_systems(OnEnter(GameState::InGame), (setup_characters, setup_points))
             .add_systems(
                 FixedUpdate,
                 apply_controls.in_set(TnuaUserControlsSystemSet),
             );
     }
 }
-
-#[derive(Component)]
-pub struct Player1;
-
-#[derive(Component)]
-pub struct Player2;
 
 fn setup_characters(
     mut commands: Commands,
@@ -48,7 +45,7 @@ fn setup_characters(
         None,
     ));
     let mut cmd = commands.spawn((
-        Player1,
+        OnGameScreen,
         Player::First,
         Actions::<Player>::default(),
         Sprite {
@@ -75,7 +72,7 @@ fn setup_characters(
         TnuaAnimatingState::<AnimationState>::default(),
     ));
     let mut cmd2 = commands.spawn((
-        Player2,
+        OnGameScreen,
         Player::Second,
         Actions::<Player>::default(),
         Sprite {

@@ -6,9 +6,9 @@ use bevy_seedling::sample::Sample;
 pub struct ImageAssets {
     #[asset(path = "images/imp/Imp-IDLE-Sprite-sheet.png")]
     pub imp_idle: Handle<Image>,
-    // #[asset(path = "images/imp/Run.png")]
+    // #[asset(path = "images/imp/Imp-WALK-Sprite-sheet.png")]
     // pub imp_walk: Handle<Image>,
-    // #[asset(path = "images/imp/Jump.png")]
+    // #[asset(path = "images/imp/Imp-JUMP-Sprite-sheet.png")]
     // pub imp_jump: Handle<Image>,
     #[asset(path = "images/goat/goat-base.png")]
     pub goat_base: Handle<Image>,
@@ -24,6 +24,8 @@ pub struct ImageAssets {
     pub goat_hair_a2_left: Handle<Image>,
     #[asset(path = "images/goat/goat-hair-A2-right.png")]
     pub goat_hair_a2_right: Handle<Image>,
+    #[asset(path = "ui/game_over.png")]
+    pub game_over_text: Handle<Image>,
 }
 
 #[derive(AssetCollection, Resource)]

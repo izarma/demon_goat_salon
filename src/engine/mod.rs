@@ -11,5 +11,5 @@ pub enum GameState {
     MainMenu,
     Loading,
     InGame,
-    Upgrades,
+    GameOver,
 }
