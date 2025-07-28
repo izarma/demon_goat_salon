@@ -1,94 +1,75 @@
 use bevy::{input::gamepad::GamepadConnectionEvent, prelude::*};
 use bevy_enhanced_input::{EnhancedInputPlugin, prelude::*};
+use bevy_tnua::prelude::{TnuaBuiltinWalk, TnuaController};
+
+use crate::imp::Player;
 
 pub struct PlayerInputPlugin;
 
 impl Plugin for PlayerInputPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(EnhancedInputPlugin)
-            .add_event::<PlayerInputs>()
-            .init_resource::<Gamepads>()
             .add_input_context::<Player>()
-            .add_observer(bind)
-            .add_observer(apply_movement)
-            .add_observer(apply_jump)
-            .add_systems(
-                FixedUpdate,
-                update_gamepads.run_if(on_event::<GamepadConnectionEvent>),
-            );
+            .add_observer(on_move)
+            .add_observer(on_move_end)
+            .add_systems(PreUpdate, gamepad_assignment_system);
     }
 }
 
-/// Used as both input context and component.
-#[derive(InputContext, Component, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum Player {
-    First,
-    Second,
-}
 
-/// A resource that tracks all connected gamepads to pick them by index.
-#[derive(Resource, Default, Deref, DerefMut)]
-struct Gamepads(Vec<Entity>);
-
-#[derive(Debug, InputAction)]
-#[input_action(output = Vec2)]
+#[derive(InputAction)]
+#[action_output(f32)]
 pub struct Move;
 
-#[derive(Debug, InputAction)]
-#[input_action(output = bool)]
+#[derive(InputAction)]
+#[action_output(bool)]
 struct Jump;
 
-// #[derive(Debug, InputAction)]
-// #[input_action(output = bool)]
-// struct Interact;
+#[derive(InputAction)]
+#[action_output(bool)]
+struct Interact;
 
-fn bind(
-    trigger: Trigger<Bind<Player>>,
-    gamepads: Query<Entity, With<Gamepad>>,
-    mut players: Query<(&Player, &mut Actions<Player>)>,
+fn gamepad_assignment_system(
+    mut events: EventReader<GamepadConnectionEvent>,
+    mut devices: Query<&mut GamepadDevice, With<Player>>,
 ) {
-    let (&player, mut actions) = players.get_mut(trigger.target()).unwrap();
-    let gamepad_entity = gamepads.iter().nth(player as usize);
-    actions.set_gamepad(gamepad_entity.unwrap_or(Entity::PLACEHOLDER));
-
-    match player {
-        Player::First => {
-            actions
-                .bind::<Move>()
-                .to(((Cardinal::wasd_keys()), Axial::left_stick()));
-            actions.bind::<Jump>().to(KeyCode::Space);
-        }
-        Player::Second => {
-            actions
-                .bind::<Move>()
-                .to((Cardinal::arrow_keys(), Axial::left_stick()));
-            actions.bind::<Jump>().to(KeyCode::Enter);
+    'outer: for event in events.read() {
+        if event.connected() {
+            for mut device in devices.iter_mut() {
+                if *device == GamepadDevice::None {
+                    *device = GamepadDevice::Single(event.gamepad);
+                    continue 'outer;
+                }
+            }
         }
     }
-
-    actions
-        .bind::<Move>()
-        .with_modifiers((DeadZone::default(), SmoothNudge::default()));
 }
 
-fn update_gamepads(mut commands: Commands) {
-    commands.trigger(RebindAll);
-}
-
-#[derive(Event, Debug)]
-pub enum PlayerInputs {
-    Walk(Entity, f32),
-    Jump(Entity),
-}
-
-fn apply_movement(
+fn on_move(
     trigger: Trigger<Fired<Move>>,
-    mut player_input_events: EventWriter<PlayerInputs>,
+    mut controllers: Query<&mut TnuaController, With<Player>>,
 ) {
-    player_input_events.write(PlayerInputs::Walk(trigger.target(), trigger.value.x));
-    //info!("entity : {:#?} , movement : {}", trigger.target(), trigger.value.x);
+    info!("player {} moved {}", trigger.target(), trigger.value);
+    controllers
+        .get_mut(trigger.target())
+        .unwrap()
+        .basis(TnuaBuiltinWalk {
+            desired_velocity: vec3(trigger.value * 10004.0, 0., 0.),
+            float_height: 70.,
+            ..Default::default()
+        });
 }
 
-fn apply_jump(trigger: Trigger<Fired<Jump>>, mut player_input_events: EventWriter<PlayerInputs>) {
-    player_input_events.write(PlayerInputs::Jump(trigger.target()));
+fn on_move_end(
+    trigger: Trigger<Completed<Move>>,
+    mut controllers: Query<&mut TnuaController, With<Player>>,
+) {
+    controllers
+        .get_mut(trigger.target())
+        .unwrap()
+        .basis(TnuaBuiltinWalk {
+            desired_velocity: Vec3::ZERO,
+            float_height: 70.,
+            ..Default::default()
+        });
 }

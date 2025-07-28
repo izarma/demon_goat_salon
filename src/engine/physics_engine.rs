@@ -8,7 +8,7 @@ pub struct PhysicsEnginePlugin;
 impl Plugin for PhysicsEnginePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((
-            PhysicsPlugins::new(FixedPostUpdate),
+            PhysicsPlugins::default(),
             TnuaControllerPlugin::new(FixedUpdate),
             TnuaAvian2dPlugin::new(FixedUpdate),
         ));
