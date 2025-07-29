@@ -53,6 +53,5 @@ fn setup_salon(mut commands: Commands) {
         Interactable,
         Transform::from_xyz(-500.0, -440.0, 0.0).with_scale(Vec3::new(0.5, 1.0, 1.0)),
         RigidBody::Static,
-        Collider::rectangle(50.0, 50.0),
     ));
 }

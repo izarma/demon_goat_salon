@@ -13,7 +13,7 @@ pub enum MenuButtons {
 pub struct OnMainMenuScreen;
 
 pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let menu_font = asset_server.load("fonts/Nasa21.ttf");
+    let menu_font = asset_server.load("fonts/UncialAntiqua-Regular.ttf");
     let title_img = asset_server.load("ui/name.png");
     commands
         .spawn((

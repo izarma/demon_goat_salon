@@ -1,8 +1,9 @@
 use bevy::prelude::*;
+use bevy_seedling::sample::SamplePlayer;
 
 use crate::{
     consts::{BUTTON_BORDER, HOVERED_BUTTON, NORMAL_BUTTON, TEXT_COLOR},
-    engine::{asset_loader::ImageAssets, GameState}, ui::customer_details::Score,
+    engine::{asset_loader::{AudioAssets, ImageAssets}, GameState}, ui::customer_details::Score,
 };
 
 #[derive(Component)]
@@ -20,7 +21,7 @@ pub fn spawn_game_over_ui(
     points_query: Query<&Score>,
     asset_server: Res<AssetServer>,
 ) {
-    let menu_font = asset_server.load("fonts/Nasa21.ttf");
+    let menu_font = asset_server.load("fonts/UncialAntiqua-Regular.ttf");
     commands
         .spawn((
             OnGameOver,
@@ -49,24 +50,6 @@ pub fn spawn_game_over_ui(
                     ..default()
                 },
             ));
-            if let Ok(points) = points_query.single() {
-                info!("Points: {:#?}", points.total);
-                parent.spawn((
-                    Text::new(format!("Your Total Score : {:#?}", points.total)),
-                    BorderRadius::ZERO,
-                    TextFont {
-                        font: menu_font.clone(),
-                        font_size: 60.0,
-                        ..default()
-                    },
-                    TextColor(TEXT_COLOR),
-                    Node {
-                        align_items: AlignItems::FlexStart,
-                        justify_content: JustifyContent::FlexStart,
-                        ..Default::default()
-                    },
-                ));
-            }
             parent
                 .spawn((
                     Button,
@@ -121,7 +104,33 @@ pub fn spawn_game_over_ui(
                         TextColor(TEXT_COLOR),
                     ));
                 });
+                if let Ok(points) = points_query.single() {
+                let game_over_text: String;
+                info!("Points: {:#?}", points.total);
+                if points.total > 199 {
+                    game_over_text = format!("You Win!\t\tTotal Points: {}", points.total)
+                }
+                else {
+                    game_over_text = format!("You Lose!\t\tTotal Points: {}", points.total)
+                }
+                parent.spawn((
+                    Text::new(game_over_text),
+                    BorderRadius::ZERO,
+                    TextFont {
+                        font: menu_font.clone(),
+                        font_size: 60.0,
+                        ..default()
+                    },
+                    TextColor(TEXT_COLOR),
+                    Node {
+                        align_items: AlignItems::FlexStart,
+                        justify_content: JustifyContent::FlexStart,
+                        ..Default::default()
+                    },
+                ));
+            }
         });
+        
 }
 
 pub fn retry_button_interaction(
@@ -149,6 +158,10 @@ pub fn retry_button_interaction(
             }
         }
     }
+}
+
+pub fn play_game_over_bg(mut commands: Commands, audio_assets: Res<AudioAssets>) {
+    commands.spawn((SamplePlayer::new(audio_assets.lose.clone()).looping(),));
 }
 
 pub fn cleanup_gameover(mut commands: Commands, query: Query<Entity, With<OnGameOver>>) {

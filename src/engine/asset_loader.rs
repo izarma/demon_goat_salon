@@ -32,4 +32,8 @@ pub struct ImageAssets {
 pub struct AudioAssets {
     #[asset(path = "audio/salon-background.ogg")]
     pub background: Handle<Sample>,
+    #[asset(path = "audio/win.ogg")]
+    pub win: Handle<Sample>,
+    #[asset(path = "audio/lose.ogg")]
+    pub lose: Handle<Sample>,
 }

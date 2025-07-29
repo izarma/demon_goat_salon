@@ -1,6 +1,6 @@
 use bevy::{input::gamepad::GamepadConnectionEvent, prelude::*};
 use bevy_enhanced_input::{EnhancedInputPlugin, prelude::*};
-use bevy_tnua::prelude::{TnuaBuiltinWalk, TnuaController};
+use bevy_tnua::prelude::{TnuaBuiltinJump, TnuaBuiltinWalk, TnuaController};
 
 use crate::{engine::GameState, game_world::imp_player::Player};
 
@@ -76,15 +76,15 @@ pub(crate) fn on_move_end(
         });
 }
 
-// pub(crate) fn on_jump(
-//     trigger: Trigger<Fired<Jump>>,
-//     mut controllers: Query<&mut TnuaController, With<Player>>,
-// ) {
-//     controllers
-//         .get_mut(trigger.target())
-//         .unwrap()
-//         .basis(TnuaBuiltinJump {
-//             height: 100.0,
-//             ..Default::default()
-//         });
-// }
+pub(crate) fn on_jump(
+    trigger: Trigger<Fired<Jump>>,
+    mut controllers: Query<&mut TnuaController, With<Player>>,
+) {
+    controllers
+        .get_mut(trigger.target())
+        .unwrap()
+        .action(TnuaBuiltinJump {
+            height: 100.0,
+            ..Default::default()
+        });
+}

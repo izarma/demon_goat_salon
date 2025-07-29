@@ -25,7 +25,7 @@ pub fn spawn_timer(
             Transform::from_translation(Vec3::new(400.0, 0.0, 0.0)),
             BorderRadius::ZERO,
             TextFont {
-                font: asset_server.load("fonts/Nasa21.ttf"),
+                font: asset_server.load("fonts/UncialAntiqua-Regular.ttf"),
                 font_size: 20.0,
                 ..default()
             },
@@ -69,7 +69,7 @@ pub fn setup_points(mut commands: Commands, asset_server: Res<AssetServer>) {
         Transform::from_translation(Vec3::new(400.0, 0.0, 0.0)),
         BorderRadius::ZERO,
         TextFont {
-            font: asset_server.load("fonts/Nasa21.ttf"),
+            font: asset_server.load("fonts/UncialAntiqua-Regular.ttf"),
             font_size: 20.0,
             ..default()
         },
