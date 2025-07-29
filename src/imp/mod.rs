@@ -73,7 +73,7 @@ fn setup_characters(
             Player[(
                 Action::<Move>::new(),
                 DeltaScale,
-                DeadZone::default(),
+                //DeadZone::default(),
                 Bindings::spawn((
                     Bidirectional {
                         positive: Binding::from(KeyCode::KeyD),
@@ -102,7 +102,7 @@ fn setup_characters(
             Player[(
                 Action::<Move>::new(),
                 DeltaScale,
-                DeadZone::default(),
+                //DeadZone::default(),
                 Bindings::spawn((
                     Bidirectional {
                         positive: Binding::from(KeyCode::ArrowRight),

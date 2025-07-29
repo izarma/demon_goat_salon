@@ -45,16 +45,20 @@ fn gamepad_assignment_system(
 pub(crate) fn on_move(
     trigger: Trigger<Fired<Move>>,
     mut controllers: Query<&mut TnuaController, With<Player>>,
+    mut transform: Query<&mut Transform, With<Player>>,
 ) {
-    info!("player {} moved {}", trigger.target(), trigger.value);
-    controllers
-        .get_mut(trigger.target())
-        .unwrap()
-        .basis(TnuaBuiltinWalk {
-            desired_velocity: vec3(trigger.value * 1000.0, 0., 0.),
-            float_height: 70.,
-            ..Default::default()
-        });
+    info!("player {} moved {}", trigger.target(), trigger.value * 1000.0);
+    for trans in transform.iter_mut() {
+        trans.with_translation(Vec3::new(trigger.value*1000.0, 0.0, 0.0));
+    }
+    // controllers
+    //     .get_mut(trigger.target())
+    //     .unwrap()
+    //     .basis(TnuaBuiltinWalk {
+    //         desired_velocity: vec3(trigger.value * 1000.0, 0., 0.),
+    //         float_height: 70.,
+    //         ..Default::default()
+    //     });
 }
 
 pub(crate) fn on_move_end(
