@@ -2,17 +2,14 @@ use bevy::{input::gamepad::GamepadConnectionEvent, prelude::*};
 use bevy_enhanced_input::{EnhancedInputPlugin, prelude::*};
 use bevy_tnua::prelude::{TnuaBuiltinWalk, TnuaController};
 
-use crate::imp::Player;
+use crate::{engine::GameState, imp::Player};
 
 pub struct PlayerInputPlugin;
 
 impl Plugin for PlayerInputPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(EnhancedInputPlugin)
-            .add_input_context::<Player>()
-            .add_observer(on_move)
-            .add_observer(on_move_end)
-            .add_systems(PreUpdate, gamepad_assignment_system);
+            .add_systems(PreUpdate, gamepad_assignment_system.run_if(in_state(GameState::InGame)));
     }
 }
 
@@ -21,13 +18,13 @@ impl Plugin for PlayerInputPlugin {
 #[action_output(f32)]
 pub struct Move;
 
-#[derive(InputAction)]
-#[action_output(bool)]
-struct Jump;
+// #[derive(InputAction)]
+// #[action_output(bool)]
+// struct Jump;
 
-#[derive(InputAction)]
-#[action_output(bool)]
-struct Interact;
+// #[derive(InputAction)]
+// #[action_output(bool)]
+// struct Interact;
 
 fn gamepad_assignment_system(
     mut events: EventReader<GamepadConnectionEvent>,
@@ -45,7 +42,7 @@ fn gamepad_assignment_system(
     }
 }
 
-fn on_move(
+pub(crate) fn on_move(
     trigger: Trigger<Fired<Move>>,
     mut controllers: Query<&mut TnuaController, With<Player>>,
 ) {
@@ -54,13 +51,13 @@ fn on_move(
         .get_mut(trigger.target())
         .unwrap()
         .basis(TnuaBuiltinWalk {
-            desired_velocity: vec3(trigger.value * 10004.0, 0., 0.),
+            desired_velocity: vec3(trigger.value * 1000.0, 0., 0.),
             float_height: 70.,
             ..Default::default()
         });
 }
 
-fn on_move_end(
+pub(crate) fn on_move_end(
     trigger: Trigger<Completed<Move>>,
     mut controllers: Query<&mut TnuaController, With<Player>>,
 ) {

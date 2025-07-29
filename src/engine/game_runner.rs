@@ -1,17 +1,17 @@
 use avian2d::{math::*, prelude::*};
-use bevy::{input::common_conditions::input_just_pressed, prelude::*};
+use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
+use bevy_enhanced_input::{action::Action, prelude::{ActionOf, InputContextAppExt}};
 use bevy_seedling::{SeedlingPlugin, sample::SamplePlayer};
+use bevy_tnua::prelude::TnuaControllerPlugin;
+use bevy_tnua_avian2d::TnuaAvian2dPlugin;
 
 use crate::{
     customer::CustomerPlugin,
     engine::{
-        GameState,
-        asset_loader::{AudioAssets, ImageAssets},
-        input_manager::PlayerInputPlugin,
-        physics_engine::PhysicsEnginePlugin,
+        asset_loader::{AudioAssets, ImageAssets}, input_manager::{Move, on_move, on_move_end, PlayerInputPlugin}, GameState
     },
-    imp::ImpPlugin,
+    imp::{ImpPlugin, Player},
     salon::SalonPlugin,
     ui::GameUiPlugin,
 };
@@ -22,11 +22,13 @@ impl Plugin for GameRunnerPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins((
             GameUiPlugin,
+            PhysicsPlugins::default(),
+            TnuaControllerPlugin::new(FixedUpdate),
+            TnuaAvian2dPlugin::new(FixedUpdate),
+            PlayerInputPlugin,
+            ImpPlugin,
             CustomerPlugin,
             SalonPlugin,
-            ImpPlugin,
-            PhysicsEnginePlugin,
-            PlayerInputPlugin,
             SeedlingPlugin::default(),
         ))
         .add_loading_state(
@@ -37,7 +39,10 @@ impl Plugin for GameRunnerPlugin {
         )
         .add_systems(Startup, setup_camera)
         .add_systems(OnExit(GameState::InGame), cleanup_game)
-        .insert_resource(Gravity(Vector::NEG_Y * 9.81 * 100.0));
+        .insert_resource(Gravity(Vector::NEG_Y * 9.81 * 100.0))
+        .add_input_context::<Player>()
+        .add_observer(on_move)
+        .add_observer(on_move_end);
     }
 }
 
