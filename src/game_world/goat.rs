@@ -4,12 +4,9 @@ use bevy::prelude::*;
 
 use crate::{
     animation::sprite_animation::animate_sprite,
-    customer::customer_timer::{game_over, spawn_timer, update_timer},
-    engine::{GameState, asset_loader::ImageAssets, game_runner::play_salon_bg},
-    ui::game_over::OnGameOver,
+    engine::{asset_loader::ImageAssets, game_runner::play_salon_bg, GameState},
+    ui::{customer_details::{game_over, spawn_timer, update_timer}, game_over::OnGameOver},
 };
-
-mod customer_timer;
 
 pub struct CustomerPlugin;
 
@@ -28,7 +25,7 @@ impl Plugin for CustomerPlugin {
 
 #[derive(Component)]
 pub struct Customer {
-    anger_timer: Timer,
+    pub anger_timer: Timer,
 }
 
 #[derive(Component)]

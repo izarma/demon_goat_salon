@@ -7,8 +7,7 @@ pub struct SalonPlugin;
 
 impl Plugin for SalonPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::InGame), setup_salon)
-            ;
+        app.add_systems(OnEnter(GameState::InGame), setup_salon);
     }
 }
 
@@ -57,4 +56,3 @@ fn setup_salon(mut commands: Commands) {
         Collider::rectangle(50.0, 50.0),
     ));
 }
-

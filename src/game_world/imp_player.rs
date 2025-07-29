@@ -1,28 +1,24 @@
 use avian2d::prelude::*;
-use bevy::prelude::*;
-use bevy_enhanced_input::{action::Action, actions, prelude::{Bidirectional, Binding, Bindings, DeadZone, DeltaScale, GamepadDevice}};
-use bevy_tnua::{
-    TnuaAnimatingState,
-    prelude::{TnuaController},
+use bevy::{prelude::*};
+use bevy_enhanced_input::{
+    action::Action,
+    actions,
+    prelude::{Bidirectional, Binding, Bindings, DeltaScale, GamepadDevice},
 };
+use bevy_tnua::{TnuaAnimatingState, prelude::TnuaController};
 
 use crate::{
     animation::{animation_state::AnimationState, sprite_animation::SpriteAnimState},
     engine::{
-        GameState, asset_loader::ImageAssets, game_runner::OnGameScreen,
-        input_manager::Move,
-    },
-    imp::score::setup_points,
+        asset_loader::ImageAssets, game_runner::OnGameScreen, input_manager::Move, GameState
+    }, ui::customer_details::setup_points,
 };
-
-pub mod score;
 
 pub struct ImpPlugin;
 
 impl Plugin for ImpPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(GameState::InGame), (setup_characters, setup_points))
-            ;
+        app.add_systems(OnEnter(GameState::InGame), (setup_characters, setup_points));
     }
 }
 
@@ -73,7 +69,6 @@ fn setup_characters(
             Player[(
                 Action::<Move>::new(),
                 DeltaScale,
-                //DeadZone::default(),
                 Bindings::spawn((
                     Bidirectional {
                         positive: Binding::from(KeyCode::KeyD),
@@ -82,9 +77,9 @@ fn setup_characters(
                     Spawn(Binding::from(GamepadAxis::LeftStickX)),
                 ))
             )]
-        )
+        ),
     ));
-    //cmd.insert((TnuaAnimatingState::<AnimationState>::default(),));
+    cmd.insert((TnuaAnimatingState::<AnimationState>::default(),));
     let mut cmd2 = commands.spawn((
         OnGameScreen,
         Player::Second,
@@ -102,7 +97,6 @@ fn setup_characters(
             Player[(
                 Action::<Move>::new(),
                 DeltaScale,
-                //DeadZone::default(),
                 Bindings::spawn((
                     Bidirectional {
                         positive: Binding::from(KeyCode::ArrowRight),
@@ -111,8 +105,7 @@ fn setup_characters(
                     Spawn(Binding::from(GamepadAxis::LeftStickX)),
                 ))
             )]
-        )
+        ),
     ));
-    //cmd2.insert((TnuaAnimatingState::<AnimationState>::default(),));
+    cmd2.insert((TnuaAnimatingState::<AnimationState>::default(),));
 }
-

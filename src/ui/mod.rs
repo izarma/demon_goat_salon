@@ -10,6 +10,7 @@ use crate::{
 
 pub mod game_over;
 pub mod main_menu;
+pub mod customer_details;
 
 pub struct GameUiPlugin;
 

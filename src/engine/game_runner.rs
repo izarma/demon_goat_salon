@@ -1,19 +1,15 @@
 use avian2d::{math::*, prelude::*};
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
-use bevy_enhanced_input::{action::Action, prelude::{ActionOf, InputContextAppExt}};
+use bevy_enhanced_input::prelude::InputContextAppExt;
 use bevy_seedling::{SeedlingPlugin, sample::SamplePlayer};
 use bevy_tnua::prelude::TnuaControllerPlugin;
 use bevy_tnua_avian2d::TnuaAvian2dPlugin;
 
 use crate::{
-    customer::CustomerPlugin,
     engine::{
-        asset_loader::{AudioAssets, ImageAssets}, input_manager::{Move, on_move, on_move_end, PlayerInputPlugin}, GameState
-    },
-    imp::{ImpPlugin, Player},
-    salon::SalonPlugin,
-    ui::GameUiPlugin,
+        asset_loader::{AudioAssets, ImageAssets}, input_manager::{on_move, on_move_end, PlayerInputPlugin}, GameState
+    }, game_world::{goat::CustomerPlugin, imp_player::{ImpPlugin, Player}, salon::SalonPlugin}, ui::GameUiPlugin
 };
 
 pub struct GameRunnerPlugin;

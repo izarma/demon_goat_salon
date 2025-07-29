@@ -2,8 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     consts::{BUTTON_BORDER, HOVERED_BUTTON, NORMAL_BUTTON, TEXT_COLOR},
-    engine::{GameState, asset_loader::ImageAssets},
-    imp::score::Score,
+    engine::{asset_loader::ImageAssets, GameState}, ui::customer_details::Score,
 };
 
 #[derive(Component)]
